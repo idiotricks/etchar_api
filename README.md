@@ -10,6 +10,9 @@ Etchar was made by `idiotricks` as an open source application that aims to "UKM"
 
 In the project directory, you can run:
 
+### `pip install -r requirements.txt`
+install all required packages.
+
 ### `python manage.py migrate`
 migrate the database from the etchar model.
 
