@@ -1,5 +1,8 @@
 import datetime
+import random
+import string
 
+from django.contrib.auth.models import User
 from django.db import models
 
 
@@ -31,3 +34,19 @@ def generate_string_code(model):
         result = None
 
     return result
+
+
+def random_string(length=10):
+    """Generate a random string of fixed length """
+    letters = string.ascii_letters
+    return ''.join(random.choice(letters) for i in range(length))
+
+
+def generate_user():
+    username = random_string(10)
+    password = random_string(10)
+    return User.objects.create_user(
+        username=username,
+        password=password,
+        is_active=False,
+    )
