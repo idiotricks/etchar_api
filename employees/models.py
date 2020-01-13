@@ -31,7 +31,6 @@ class Employee(Timestamp):
 
 @receiver(post_save, sender=Employee)
 def create_employee(sender, instance=None, created=False, **kwargs):
-    print(instance.user)
     if instance.user:
         user = User.objects.get(username=instance.user.username)
         user.first_name = instance.first_name
@@ -39,4 +38,3 @@ def create_employee(sender, instance=None, created=False, **kwargs):
         user.email = instance.email
         user.is_active = instance.is_publish
         user.save()
-        print(user.first_name)

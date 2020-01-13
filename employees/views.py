@@ -11,7 +11,7 @@ from utils.models import generate_user, generate_string_code
 
 
 class EmployeeViewSet(viewsets.ModelViewSet):
-    queryset = Employee.objects.all()
+    queryset = Employee.objects.all().order_by('-created_at')
     serializer_class = EmployeeSerializer
     authentication_classes = [
         SessionAuthentication,
@@ -67,4 +67,36 @@ class EmployeeViewSet(viewsets.ModelViewSet):
         employee.is_publish = False
         employee.save()
 
+        return Response(self.serializer_class(employee).data)
+
+    @action(methods=['POST'], detail=True)
+    def sanity(self, request, pk=None):
+        employee = self.get_object()
+        employee.is_publish = True
+
+        if not employee.last_name:
+            employee.is_publish = False
+
+        if employee.salary <= 0:
+            employee.is_publish = False
+
+        if employee.marital_status == 'single' and employee.children > 0:
+            employee.children = 0
+
+        if employee.marital_status == 'married' and employee.children > 2:
+            employee.children = 1
+
+        if not employee.first_name:
+            employee.is_publish = False
+
+        if len(employee.first_name) < 4:
+            employee.is_publish = False
+
+        if not employee.email:
+            employee.is_publish = False
+
+        if not employee.user:
+            employee.is_publish = False
+
+        employee.save()
         return Response(self.serializer_class(employee).data)
